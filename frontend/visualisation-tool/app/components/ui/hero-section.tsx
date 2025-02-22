@@ -9,7 +9,7 @@ const poppins = Poppins({
 
 const HeroSection = () => {
   return (
-    <section className={`flex ${poppins.className} min-h-screen w-full items-center justify-center  text-white px-6 z-10`}>
+    <section className={`flex ${poppins.className} min-h-screen w-full  bg-black items-center justify-center  text-white px-6 z-10`}>
       <div className="container  flex flex-col md:flex-row-reverse items-center justify-between gap-12">
         
         <div className="w-full h-[50vh] md:w-3/5 flex justify-center ">

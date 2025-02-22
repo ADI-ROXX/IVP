@@ -1,3 +1,4 @@
+import Link from "next/link";
 interface CNTButtonProps {
   active: boolean;
   linkto: string;
@@ -14,7 +15,7 @@ const CNTButton: React.FC<CNTButtonProps> = ({ active, linkto, content }) => {
             : "bg-richblack-800 shadow-sm shadow-richblack-100"
         }`}
       >
-        {content}
+        <Link href={linkto}> {content} </Link>
       </button>
     </div>
   );
