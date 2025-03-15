@@ -10,7 +10,7 @@ export default function LandingPage() {
   return (
     <div>
       <BackgroundLines>
-        <Navbar />
+        <Navbar fixed={true} />
         <HeroSection />
       </BackgroundLines>
       <div className="bg-black min-h-[100vh] pb-1 mt-[-4rem]">
