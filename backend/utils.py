@@ -7,8 +7,6 @@ import asyncio
 import base64
 import json
 import io
-from sklearn.linear_model import Ridge, Lasso
-
 
 def make_varied_blobs(n_samples=500, random_state=42):
     np.random.seed(random_state)
