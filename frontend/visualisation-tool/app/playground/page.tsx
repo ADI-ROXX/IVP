@@ -82,7 +82,7 @@ export default function PlaygroundPage() {
 
   return (
     <>
-      <div className="bg-black min-h-[100vh]">
+      <div className="min-h-screen bg-gradient-to-br from-black via-purple-950 to-gray-900 overflow-hidden">
         <Navbar fixed={false} />
         <div className="hidden bg-white px-3 flex-col mb-5 md:flex max-w-[1200px] mx-auto mt-8 rounded-lg shadow-lg">
           <div className="container flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
