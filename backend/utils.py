@@ -62,9 +62,12 @@ def get_datasets():
     
     X2_log, y2_log =  make_classification(n_samples=100, n_features=2, n_informative=1,n_redundant=0,
                            n_classes=2, n_clusters_per_class=1, random_state=41,hypercube=False,class_sep=10)
+    
     X3_log, y3_log = make_moons(n_samples=300, noise=0.1, random_state=42)
     
-    X3 = make_varied_blobs(n_samples=500, random_state=42)
+    X1_kmean = make_varied_blobs(n_samples=500, random_state=42)
+    X2_kmean, _ = make_moons(n_samples=300, noise=0.6, random_state=42)
+    X3_kmeans, _ = make_moons(n_samples=300, noise=0.1, random_state=42)
 
     return {
         "1": {"X": X1_reg.tolist(), "y": y1_reg.tolist()},
@@ -73,7 +76,9 @@ def get_datasets():
         "4": {"X": X1_log.tolist(), "y": y1_log.tolist()},
         "5": {"X": X2_log.tolist(), "y": y2_log.tolist()},
         "6": {"X": X3_log.tolist(), "y": y3_log.tolist()},
-        "7": {"X": X3.tolist()}
+        "7": {"X": X1_kmean.tolist()},
+        "8": {"X": X2_kmean.tolist()},
+        "9": {"X" : X3_kmeans.tolist()}
     }
 
 def generate_plot(X, y=None, algorithm=None, state=None):
