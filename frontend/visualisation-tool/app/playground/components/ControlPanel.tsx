@@ -6,7 +6,7 @@ import { ModelSelector } from "./model-selector";
 import { MaxEpochSelector } from "./maxepoch-selector";
 import DatasetSelector from "./DatasetSelector";
 import { MaxKSelector } from "./MaxKSelector";
-
+import { Degree } from "./Degree";
 const ControlPanel = ({
   isRunning,
   handleDatasetChange,
@@ -18,6 +18,8 @@ const ControlPanel = ({
   models,
   selectedAlgorithm,
   setK,
+  degree,
+  setDegree,
 }: any) => {
   return (
     <div className="hidden flex-col space-y-4 sm:flex md:order-2">
@@ -37,6 +39,10 @@ const ControlPanel = ({
       {selectedAlgorithm === "K-Means Clustering" && (
         <MaxKSelector defaultValue={[3]} setK={setK} />
       )}
+
+      {/* {selectedAlgorithm === "Linear Regression" && (
+        <Degree defaultValue={[1]} setDegree={setDegree} />
+      )} */}
 
       <div className="flex w-full items-center space-x-2">
         <Button onClick={startAlgorithm} disabled={isRunning}>

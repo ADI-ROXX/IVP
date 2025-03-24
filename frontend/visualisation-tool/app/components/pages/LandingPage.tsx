@@ -31,6 +31,10 @@ const LandingPage = () => {
   useEffect(() => {
     if (!mountRef.current) return;
 
+    while (mountRef.current.firstChild) {
+      mountRef.current.removeChild(mountRef.current.firstChild);
+    }
+
     // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
@@ -237,6 +241,9 @@ const LandingPage = () => {
 
     // Cleanup
     return () => {
+      if (mountRef.current && renderer.domElement.parentNode === mountRef.current) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
       mountRef.current?.removeChild(renderer.domElement);
       renderer.dispose();
       nodes.forEach((node) => {

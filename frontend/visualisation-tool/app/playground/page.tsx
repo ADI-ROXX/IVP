@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Tabs } from "@/components/ui/tabs";
 import { CodeViewer } from "./components/code-viewer";
@@ -8,6 +8,8 @@ import { models, types } from "./data/models";
 import Navbar from "../components/pages/Navbar";
 import ControlPanel from "./components/ControlPanel";
 import VisualizationTab from "./components/VisualizationTab";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function PlaygroundPage() {
   const [selectedDataset, setSelectedDataset] = useState("1");
@@ -18,6 +20,9 @@ export default function PlaygroundPage() {
   const [epochs, setEpochs] = useState(50);
   const [metrics, setMetrics] = useState(null);
   const [k, setK] = useState(3);
+  const [degree, setDegree] = useState(1); // New state for polynomial degree
+  const [socketConnected, setSocketConnected] = useState(false);
+  const wsRef = useRef(null);
 
   // Reset state when algorithm or dataset changes
   const resetState = () => {
@@ -36,54 +41,116 @@ export default function PlaygroundPage() {
     resetState();
   };
 
+  // Initialize WebSocket connection
   useEffect(() => {
+    // Close previous connection if exists
+    if (wsRef.current) {
+      wsRef.current.close();
+    }
+
+    // Only establish connection when ready to run
     if (!isRunning) return;
 
+    const serverUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "localhost:8000";
     const ws = new WebSocket(
-      `ws://localhost:8000/ws/${selectedAlgorithm}/${selectedDataset}/${epochs}/${k}`
+      `ws://${serverUrl}/ws/${selectedAlgorithm}/${selectedDataset}/${epochs}/${k}/${degree}`
     );
+    wsRef.current = ws;
 
-    ws.onopen = () => {
-      console.log("WebSocket connected");
-    };
+    // ws.onopen = () => {
+    //   console.log("WebSocket connected");
+    //   setSocketConnected(true);
+    //   toast.success("🔌 Connected to the ML server!", {
+    //     position: "top-right",
+    //     autoClose: 3000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     theme: "dark",
+    //   });
+    // };
 
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
       if (message.type === "start") {
         setPlotImage(null); // Clear previous plot
         setMetrics(null); // Clear previous metrics
+        toast.info("🚀 Algorithm started running...", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+        });
       } else if (message.type === "update") {
         setPlotImage(`data:image/png;base64,${message.data.image}`);
         setMetrics(message.data.metrics); // Set the new metrics
       } else if (message.type === "end") {
         setIsRunning(false);
         ws.close();
+        toast.success("✅ Algorithm completed successfully!", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+        });
       }
     };
 
     ws.onerror = (error) => {
       console.error("WebSocket error:", error);
       setIsRunning(false);
+      setSocketConnected(false);
+      toast.error("❌ Connection error with ML server", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     };
 
-    ws.onclose = () => {
-      console.log("WebSocket closed");
-      setIsRunning(false);
-    };
+    // ws.onclose = () => {
+    //   console.log("WebSocket closed");
+    //   setIsRunning(false);
+    //   setSocketConnected(false);
+    //   toast.info("🔌 Disconnected from ML server", {
+    //     position: "top-right",
+    //     autoClose: 3000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     theme: "dark",
+    //   });
+    // };
 
     return () => {
-      ws.close();
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
     };
-  }, [isRunning, selectedAlgorithm, selectedDataset, epochs]);
+  }, [isRunning, selectedAlgorithm, selectedDataset, epochs, k, degree]);
 
   const startAlgorithm = () => {
-    if (!isRunning) setIsRunning(true);
+    if (!isRunning) {
+      setIsRunning(true);
+    }
   };
 
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-black via-purple-950 to-gray-900 overflow-hidden">
         <Navbar fixed={false} />
+        <ToastContainer position="top-right" />
         <div className="hidden bg-white px-3 flex-col mb-5 md:flex max-w-[1200px] mx-auto mt-8 rounded-lg shadow-lg">
           <div className="container flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
             <h2 className="text-lg font-semibold">Playground</h2>
@@ -109,6 +176,9 @@ export default function PlaygroundPage() {
                     models={models}
                     setK={setK}
                     selectedAlgorithm={selectedAlgorithm}
+                    socketConnected={socketConnected}
+                    degree={degree}
+                    setDegree={setDegree}
                   />
 
                   <div className="md:order-1">

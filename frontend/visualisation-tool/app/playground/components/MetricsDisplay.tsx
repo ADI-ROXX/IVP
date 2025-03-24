@@ -40,11 +40,32 @@ export default function MetricsDisplay({ metrics, algorithm, epochs }: any) {
       </div>
     );
   }
+  const PolynomialEquation = ({ coeffs }: { coeffs: number[] }) => {
+    if (!coeffs || !Array.isArray(coeffs)) return <span>y = ?</span>;
+
+    return (
+      <div className="text-lg font-mono bg-slate-50 p-2 rounded">
+        y = {coeffs[0].toFixed(4)}
+        {coeffs.slice(1).map((coeff, index) => {
+          const power = index + 1;
+          return (
+            <span key={index}>
+              {coeff >= 0 ? " + " : " - "}
+              {Math.abs(coeff).toFixed(4)}x{power > 1 && <sup>{power}</sup>}
+            </span>
+          );
+        })}
+      </div>
+    );
+  };
 
   switch (algorithm) {
     case "Linear Regression":
     case "Ridge Regression":
     case "Lasso Regression":
+      const degree = safelyAccessProperty(metrics, "degree", 1);
+      const hasPolynomial = degree > 1;
+      const coeffs = safelyAccessProperty(metrics, "coeffs", null);
       return (
         <div className="space-y-4">
           <div className="flex justify-between items-center">
@@ -78,10 +99,14 @@ export default function MetricsDisplay({ metrics, algorithm, epochs }: any) {
 
           <Card className="p-3">
             <h3 className="font-semibold mb-2">Current Equation</h3>
-            <p className="text-lg font-mono bg-slate-50 p-2 rounded">
-              y = {safelyAccessProperty(metrics, "slope", 0).toFixed(4)}x +{" "}
-              {safelyAccessProperty(metrics, "intercept", 0).toFixed(4)}
-            </p>
+            {hasPolynomial && coeffs ? (
+              <PolynomialEquation coeffs={coeffs} />
+            ) : (
+              <p className="text-lg font-mono bg-slate-50 p-2 rounded">
+                y = {safelyAccessProperty(metrics, "slope", 0).toFixed(4)}x +{" "}
+                {safelyAccessProperty(metrics, "intercept", 0).toFixed(4)}
+              </p>
+            )}
           </Card>
 
           <div className="text-sm text-slate-500 mt-4">
@@ -142,7 +167,8 @@ export default function MetricsDisplay({ metrics, algorithm, epochs }: any) {
         </div>
       );
 
-    case "K-Means":
+    case "K-Means Clustering":
+      let cluster_colors = safelyAccessProperty(metrics, "cluster_colors", []);
       return (
         <div className="space-y-4">
           <div className="flex justify-between items-center">
@@ -167,21 +193,32 @@ export default function MetricsDisplay({ metrics, algorithm, epochs }: any) {
           </div>
 
           {safelyAccessProperty(metrics, "cluster_counts", null) && (
-            <Card className="p-3">
-              <h3 className="font-semibold mb-2">Cluster Points</h3>
-              <div className="flex justify-around text-center">
+            <Card className="p-3 s">
+              <h3 className="font-semibold mb-2">
+                Number of Points per Cluster
+              </h3>
+              <div
+                className="grid grid-cols-3 gap-4 max-h-44 overflow-y-auto"
+                style={{ scrollbarWidth: "thin" }}
+              >
                 {safelyAccessProperty(metrics, "cluster_counts", []).map(
                   (count, idx) => (
-                    <div key={idx} className="flex flex-col items-center">
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between p-2 rounded-md"
+                      style={{
+                        backgroundColor: `${cluster_colors[idx]}20`, // Adding transparency
+                        border: `2px solid ${cluster_colors[idx]}`,
+                      }}
+                    >
                       <div
-                        className={`w-4 h-4 rounded-full mb-1 bg-${
-                          ["blue", "green", "red"][idx % 3]
-                        }-500`}
+                        className="w-4 h-4 rounded-full mr-2"
+                        style={{ backgroundColor: cluster_colors[idx] }}
                       ></div>
-                      <p>
+                      <span className="font-medium">
                         Cluster {idx + 1}:{" "}
                         <span className="font-bold">{count}</span>
-                      </p>
+                      </span>
                     </div>
                   )
                 )}
