@@ -24,9 +24,9 @@ async def get_dataset(dataset_id: str):
         return datasets[dataset_id]
     return {"error": "Dataset not found"}
 
-# WebSocket endpoint
-@app.websocket("/ws/{algorithm}/{dataset_id}/{epochs}/{k}")
-async def websocket_endpoint(websocket: WebSocket, algorithm: str, dataset_id: str, epochs: int, k: int):
+# Update your WebSocket endpoint to accept the degree parameter
+@app.websocket("/ws/{algorithm}/{dataset_id}/{epochs}/{k}/{degree}")
+async def websocket_endpoint(websocket: WebSocket, algorithm: str, dataset_id: str, epochs: int, k: int, degree: int = 1):
     await websocket.accept()
     if dataset_id not in datasets:
         await websocket.send_text(json.dumps({"error": "Invalid dataset"}))
@@ -41,7 +41,7 @@ async def websocket_endpoint(websocket: WebSocket, algorithm: str, dataset_id: s
     X, y = data["X"], data.get("y")
     print(algorithm)
     if algorithm == "Linear Regression":
-        await run_linear_regression(X, y, websocket, epochs)
+        await run_linear_regression(X, y, websocket, epochs, degree)
     elif algorithm == "Logistic Regression":
         await run_logistic_regression(X, y, websocket, epochs)
     elif algorithm == "K-Means Clustering":

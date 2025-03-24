@@ -47,7 +47,6 @@ def make_tilted_clusters(n_samples=300, noise=0.1, random_state=42):
     
     return X, y
 
-# Generate sample 2D datasets
 def get_datasets():
     X1_reg, y1_reg = make_regression(n_samples=100, n_features=1, n_informative=1, n_targets=1, noise=20, random_state=13)
     y1_reg = y1_reg.reshape(-1, 1)
@@ -81,22 +80,45 @@ def get_datasets():
         "9": {"X" : X3_kmeans.tolist()}
     }
 
-def generate_plot(X, y=None, algorithm=None, state=None):
+def generate_plot(X, y=None, algorithm=None, state=None, degree=1,cluster_colors=None):
     X = np.array(X)
 
     if algorithm == "Linear Regression" or algorithm == "Ridge Regression" or algorithm == "Lasso Regression": 
         # Scatter plot with vibrant color and circular markers
-        plt.scatter(X, y, color='blue', marker='o', label='Data Points',edgecolors='black', linewidths=1)
+        plt.scatter(X, y, color='blue', marker='o', label='Data Points', edgecolors='black', linewidths=1)
         if state:
-            slope, intercept = state['slope'], state['intercept']
-            x_range = np.linspace(min(X), max(X), 100)  # Smoother line with more points
-            y_pred = slope * x_range + intercept
-            plt.plot(x_range, y_pred, color='red', linewidth=3, label=f'Regression Line: y = {slope:.2f}x + {intercept:.2f}')
-        plt.title(algorithm, fontsize=16)
+            if degree == 1:
+                slope, intercept = state['slope'], state['intercept']
+                x_range = np.linspace(min(X), max(X), 100)  # Smoother line with more points
+                y_pred = slope * x_range + intercept
+                plt.plot(x_range, y_pred, color='red', linewidth=3, 
+                        label=f'Linear: y = {slope:.2f}x + {intercept:.2f}')
+            else:
+                coeffs = state['coeffs']
+                x_range = np.linspace(min(X), max(X), 100)  # Smoother line with more points
+                
+                # Create polynomial predictions
+                y_pred = np.zeros_like(x_range)
+                for i, coeff in enumerate(coeffs):
+                    y_pred += coeff * (x_range ** i)
+                
+                # Format equation for label
+                equation = f"y = {coeffs[0]:.2f}"
+                for i in range(1, len(coeffs)):
+                    if coeffs[i] >= 0:
+                        equation += f" + {coeffs[i]:.2f}x^{i}"
+                    else:
+                        equation += f" - {abs(coeffs[i]):.2f}x^{i}"
+                
+                plt.plot(x_range, y_pred, color='red', linewidth=3, 
+                        label=f'Polynomial: {equation}')
+        
+        plt.title(f"{'Polynomial' if degree > 1 else 'Linear'} Regression (Degree {degree})", fontsize=16)
         plt.xlabel('Feature 1', fontsize=12)
         plt.ylabel('Feature 2', fontsize=12)
-        plt.grid(True, linestyle='--', alpha=0.5)  # Subtle gridl   ines
+        plt.grid(True, linestyle='--', alpha=0.5)  # Subtle gridlines
         plt.legend(fontsize=10)
+        
 
     elif algorithm == "Logistic Regression":
         # Scatter plot with a cool color map for classes
@@ -145,12 +167,27 @@ def generate_plot(X, y=None, algorithm=None, state=None):
         if state:
             assignments = state['assignments']
             centers = np.array(state['centers'])
-            # Use a vibrant color map for clusters
-            scatter = plt.scatter(X[:, 0], X[:, 1], c=assignments, cmap='tab10', marker='o', s=50, alpha=0.7)
+
+            # Use predefined cluster colors
+            if cluster_colors is None:
+                cmap = plt.cm.get_cmap('tab20')
+                cluster_colors = [
+                    '#{:02x}{:02x}{:02x}'.format(
+                        int(255 * rgb[0]), int(255 * rgb[1]), int(255 * rgb[2])
+                    ) for rgb in [cmap(i) for i in range(len(np.unique(assignments)))]
+                ]
+
+            # Map assignments to colors
+            colors = [cluster_colors[assignment] for assignment in assignments]
+
+            # Plot data points with cluster colors
+            plt.scatter(X[:, 0], X[:, 1], c=colors, marker='o', s=50, alpha=0.7)
+
             # Highlight cluster centers with bold markers
             plt.scatter(centers[:, 0], centers[:, 1], c='black', marker='x', s=100, label='Cluster Centers')
         else:
-            scatter = plt.scatter(X[:, 0], X[:, 1], color='grey', marker='o', s=50, alpha=0.7)
+            plt.scatter(X[:, 0], X[:, 1], color='grey', marker='o', s=50, alpha=0.7)
+
         plt.title('K-Means Clustering', fontsize=16)
         plt.xlabel('Feature 1', fontsize=12)
         plt.ylabel('Feature 2', fontsize=12)
@@ -165,29 +202,36 @@ def generate_plot(X, y=None, algorithm=None, state=None):
     plt.close()
     return img_str
 
-
-# Iterative Linear Regression
-async def run_linear_regression(X, y, websocket: WebSocket, epochs: int):
-    X_feature = np.array(X)
-    y = np.array(y)
+async def run_linear_regression(X, y, websocket: WebSocket, epochs: int, degree: int = 1):
+    X_feature = np.array(X).flatten()
+    y = np.array(y).flatten()
     
-    slope, intercept = 0.0, 0.0
+    # Create polynomial features
+    X_poly = np.ones((len(X_feature), degree + 1))
+    for i in range(1, degree + 1):
+        X_poly[:, i] = X_feature ** i
+    
+    # Initialize coefficients
+    coeffs = np.zeros(degree + 1)
     learning_rate = 0.01
     await websocket.send_text(json.dumps({"type": "start"}))
     
     for epoch in range(epochs):
-        y_pred = slope * X_feature + intercept
+        # Forward pass
+        y_pred = np.zeros_like(y)
+        for i in range(degree + 1):
+            y_pred += coeffs[i] * (X_feature ** i)
         
         # Calculate loss (MSE)
         loss = np.mean((y - y_pred) ** 2)
         
-        # Calculate gradients
-        gradient_slope = -2 * np.mean(X_feature * (y - y_pred))
-        gradient_intercept = -2 * np.mean(y - y_pred)
+        # Calculate gradients for each coefficient
+        gradients = np.zeros(degree + 1)
+        for i in range(degree + 1):
+            gradients[i] = -2 * np.mean((y - y_pred) * (X_feature ** i))
         
         # Update parameters
-        slope -= learning_rate * gradient_slope
-        intercept -= learning_rate * gradient_intercept
+        coeffs -= learning_rate * gradients
         
         # Calculate R-squared
         y_mean = np.mean(y)
@@ -195,26 +239,36 @@ async def run_linear_regression(X, y, websocket: WebSocket, epochs: int):
         ss_residual = np.sum((y - y_pred) ** 2)
         r_squared = 1 - (ss_residual / ss_total) if ss_total != 0 else 0
         
-        state = {"slope": slope, "intercept": intercept}
-        img_str = generate_plot(X, y, "Linear Regression", state)
+        # For simple linear case, extract slope and intercept for compatibility
+        metrics_dict = {
+            "epoch": epoch + 1,
+            "loss": float(loss),
+            "r_squared": float(r_squared),
+            "gradient_magnitude": float(np.linalg.norm(gradients)),
+            "degree": degree,
+            "coeffs": coeffs.tolist()
+        }
         
+        # For degree 1, also provide slope/intercept for backward compatibility
+        if degree == 1:
+            metrics_dict["slope"] = float(coeffs[1])
+            metrics_dict["intercept"] = float(coeffs[0])
+            state = {"slope": coeffs[1], "intercept": coeffs[0]}
+        else:
+            state = {"coeffs": coeffs.tolist()}
+        
+        img_str = generate_plot(X, y, "Linear Regression", state, degree)
+
         await websocket.send_text(json.dumps({
             "type": "update",
             "data": {
                 "image": img_str,
-                "metrics": {
-                    "epoch": epoch + 1,
-                    "loss": float(loss),
-                    "slope": float(slope),
-                    "intercept": float(intercept),
-                    "r_squared": float(r_squared),
-                    "gradient_magnitude": float(np.sqrt(gradient_slope**2 + gradient_intercept**2))
-                }
+                "metrics": metrics_dict
             }
         }))
         await asyncio.sleep(0.2)
     await websocket.send_text(json.dumps({"type": "end"}))
-
+    
 async def run_logistic_regression(X, y, websocket: WebSocket, epochs: int):
     X = np.array(X)
     y = np.array(y)
@@ -270,14 +324,6 @@ async def run_logistic_regression(X, y, websocket: WebSocket, epochs: int):
                 }
             }
         }))
-        
-        # Debugging information
-        print(f"Epoch: {epoch + 1}")
-        print(f"Coef: {coef}")
-        print(f"Intercept: {intercept}")
-        print(f"Loss: {loss}")
-        print(f"Accuracy: {accuracy * 100}%")
-        print(f"Gradient Magnitude: {gradient_magnitude}")
 
         # Convergence check
         if gradient_magnitude < 1e-5:
@@ -287,9 +333,17 @@ async def run_logistic_regression(X, y, websocket: WebSocket, epochs: int):
 
     await websocket.send_text(json.dumps({"type": "end"}))
 
-async def run_kmeans(X, websocket: WebSocket, epochs: int,k:int):
+async def run_kmeans(X, websocket: WebSocket, epochs: int, k: int):
     X = np.array(X)
     centers = X[np.random.choice(X.shape[0], k, replace=False)]
+    
+    # Define fixed colors for clusters using the same colormap as the plot
+    cmap = plt.cm.get_cmap('tab20')
+    cluster_colors = [
+        '#{:02x}{:02x}{:02x}'.format(
+            int(255 * rgb[0]), int(255 * rgb[1]), int(255 * rgb[2])
+        ) for rgb in [cmap(i) for i in range(k)]
+    ]
     
     await websocket.send_text(json.dumps({"type": "start"}))
     
@@ -319,7 +373,9 @@ async def run_kmeans(X, websocket: WebSocket, epochs: int,k:int):
             change_ratio = np.mean(assignments != prev_assignments)
         
         state = {"centers": centers.tolist(), "assignments": assignments.tolist()}
-        img_str = generate_plot(X, algorithm="K-Means Clustering", state=state)
+        img_str = generate_plot(X, algorithm="K-Means Clustering", state=state,cluster_colors = cluster_colors)
+        
+        cluster_counts = [int((assignments == i).sum()) for i in range(k)]
         
         await websocket.send_text(json.dumps({
             "type": "update",
@@ -330,8 +386,9 @@ async def run_kmeans(X, websocket: WebSocket, epochs: int,k:int):
                     "inertia": float(inertia),
                     "silhouette": float(silhouette),
                     "change_ratio": float(change_ratio),
-                    "cluster_counts": [int((assignments == i).sum()) for i in range(k)],
-                    "centers": [[float(c) for c in center] for center in centers]
+                    "cluster_counts": cluster_counts,
+                    "centers": [[float(c) for c in center] for center in centers],
+                    "cluster_colors": cluster_colors
                 }
             }
         }))
@@ -348,13 +405,7 @@ async def run_kmeans(X, websocket: WebSocket, epochs: int,k:int):
         await asyncio.sleep(0.5)
         
     await websocket.send_text(json.dumps({"type": "end"}))
-    
-import numpy as np
-import json
-import asyncio
-import matplotlib.pyplot as plt
 
-# Ridge Regression Implementation
 async def run_ridge_regression(X, y, websocket: WebSocket, epochs: int, alpha: float = 0.1):
     X_feature = np.array(X)
     y = np.array(y)
@@ -406,7 +457,6 @@ async def run_ridge_regression(X, y, websocket: WebSocket, epochs: int, alpha: f
         await asyncio.sleep(0.2)
     await websocket.send_text(json.dumps({"type": "end"}))
 
-# Lasso Regression Implementation
 async def run_lasso_regression(X, y, websocket: WebSocket, epochs: int, alpha: float = 0.1):
     X_feature = np.array(X)
     y = np.array(y)
