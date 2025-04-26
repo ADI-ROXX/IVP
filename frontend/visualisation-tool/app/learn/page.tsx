@@ -15,7 +15,7 @@ export default function LearnPage() {
       </div>
 
       {/* Navigation Bar */}
-      <Navbar />
+      <Navbar fixed = {true} />
 
       {/* Main Content */}
       <LearnContent algorithms={algorithmsData} />

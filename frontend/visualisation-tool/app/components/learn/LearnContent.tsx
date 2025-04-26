@@ -85,7 +85,7 @@ export default function LearnContent({ algorithms }: LearnContentProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 text-white hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] transition-all duration-300"
+          className="bg-gray-900/50 backdrop-blur-sm h-max rounded-2xl p-6 text-white hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] transition-all duration-300"
         >
           <h3 className="text-xl sm:text-2xl font-semibold mb-4">Quick Facts</h3>
           <p className="text-gray-300 text-sm mb-2"><strong>Use Cases:</strong></p>
