@@ -8,6 +8,7 @@ import { models, types } from "./data/models";
 import Navbar from "../components/pages/Navbar";
 import ControlPanel from "./components/ControlPanel";
 import VisualizationTab from "./components/VisualizationTab";
+import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DL from "./components/DL";
@@ -151,102 +152,127 @@ export default function PlaygroundPage() {
     <>
       <div className="min-h-screen bg-gradient-to-br from-black via-purple-950 to-gray-900 overflow-hidden">
         <Navbar fixed={false} />
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative z-10 mt-10 max-w-2xl mx-auto text-center"
+        >
+          <h1 className="text-5xl md:text-6xl text-white font-bold mb-6 drop-shadow-[0_0_10px_rgba(147,51,234,0.5)] ">
+            Explore and Visualize
+          </h1>
+          <p className="text-xl text-gray-200 leading-relaxed">
+            Dive into an interactive playground where you can experiment with
+            machine learning and deep learning models. Visualize how models
+            learn, make predictions, and adapt in real time — all in an
+            intuitive, hands-on environment.
+          </p>
+        </motion.div>
         <ToastContainer position="top-right" />
-        <div className="hidden bg-white px-3 flex-col mb-5 md:flex max-w-[1200px] mx-auto mt-8 rounded-lg shadow-lg">
-          <div className="container flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
-            <div className="flex space-x-6 items-center">
-              <h2 className="text-lg font-semibold">Playground</h2>
-              <div className="flex space-x-4 text-nowrap">
-                <button
-                  className={`px-3 py-2 text-sm font-medium w-full rounded transition-colors ${
-                    activeTab === "machine-learning"
-                      ? "bg-purple-100 text-purple-800"
-                      : "hover:bg-gray-100"
-                  }`}
-                  onClick={() => setActiveTab("machine-learning")}
-                >
-                  Machine Learning
-                </button>
-                <button
-                  className={`px-3 py-2 text-sm text-nowrap font-medium rounded transition-colors ${
-                    activeTab === "deep-learning"
-                      ? "bg-purple-100 text-purple-800"
-                      : "hover:bg-gray-100"
-                  }`}
-                  onClick={() => setActiveTab("deep-learning")}
-                >
-                  Deep Learning
-                </button>
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="hidden bg-white px-3 flex-col mb-10 md:flex max-w-[1200px] mx-auto mt-8 rounded-lg shadow-lg">
+            <div className="container flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
+              <div className="flex space-x-6 items-center">
+                <h2 className="text-lg font-semibold">Playground</h2>
+                <div className="flex space-x-4 text-nowrap">
+                  <button
+                    className={`px-3 py-2 text-sm font-medium w-full rounded transition-colors ${
+                      activeTab === "machine-learning"
+                        ? "bg-purple-100 text-purple-800"
+                        : "hover:bg-gray-100"
+                    }`}
+                    onClick={() => setActiveTab("machine-learning")}
+                  >
+                    Machine Learning
+                  </button>
+                  <button
+                    className={`px-3 py-2 text-sm text-nowrap font-medium rounded transition-colors ${
+                      activeTab === "deep-learning"
+                        ? "bg-purple-100 text-purple-800"
+                        : "hover:bg-gray-100"
+                    }`}
+                    onClick={() => setActiveTab("deep-learning")}
+                  >
+                    Deep Learning
+                  </button>
+                </div>
+              </div>
+              <div className="ml-auto flex w-full space-x-2 sm:justify-end">
+                {activeTab === "machine-learning" && (
+                  <div className="hidden space-x-2 md:flex">
+                    <CodeViewer selectedAlgorithm={selectedAlgorithm} />
+                  </div>
+                )}
               </div>
             </div>
-            <div className="ml-auto flex w-full space-x-2 sm:justify-end">
-              {activeTab === "machine-learning" && (
-                <div className="hidden space-x-2 md:flex">
-                  <CodeViewer selectedAlgorithm={selectedAlgorithm} />
-                </div>
-              )}
-            </div>
-          </div>
-          <Separator />
+            <Separator />
 
-          {activeTab === "machine-learning" ? (
-            <div className="px-4">
-              <Tabs defaultValue="d1" className="flex-1">
-                <div className="container h-full py-6">
-                  <div className="grid h-full items-stretch gap-6 md:grid-cols-[1fr_200px]">
-                    <ControlPanel
-                      isRunning={isRunning}
-                      handleDatasetChange={handleDatasetChange}
-                      handleAlgorithmChange={handleAlgorithmChange}
-                      setEpochs={setEpochs}
-                      startAlgorithm={startAlgorithm}
-                      resetState={resetState}
-                      types={types}
-                      models={models}
-                      setK={setK}
-                      selectedAlgorithm={selectedAlgorithm}
-                      socketConnected={socketConnected}
-                      degree={degree}
-                      setDegree={setDegree}
-                    />
+            {activeTab === "machine-learning" ? (
+              <div className="px-4">
+                <Tabs defaultValue="d1" className="flex-1">
+                  <div className="container h-full py-6 rounded-md">
+                    <div className="grid h-full items-stretch gap-6 md:grid-cols-[1fr_200px]">
+                      <ControlPanel
+                        isRunning={isRunning}
+                        handleDatasetChange={handleDatasetChange}
+                        handleAlgorithmChange={handleAlgorithmChange}
+                        setEpochs={setEpochs}
+                        startAlgorithm={startAlgorithm}
+                        resetState={resetState}
+                        types={types}
+                        models={models}
+                        setK={setK}
+                        selectedAlgorithm={selectedAlgorithm}
+                        socketConnected={socketConnected}
+                        degree={degree}
+                        setDegree={setDegree}
+                      />
 
-                    <div className="md:order-1">
-                      <VisualizationTab
-                        value="d1"
-                        plotImage={plotImage}
-                        metrics={metrics}
-                        isRunning={isRunning}
-                        selectedAlgorithm={selectedAlgorithm}
-                        epochs={epochs}
-                      />
-                      <VisualizationTab
-                        value="d2"
-                        plotImage={plotImage}
-                        metrics={metrics}
-                        isRunning={isRunning}
-                        selectedAlgorithm={selectedAlgorithm}
-                        epochs={epochs}
-                      />
-                      <VisualizationTab
-                        value="d3"
-                        plotImage={plotImage}
-                        metrics={metrics}
-                        isRunning={isRunning}
-                        selectedAlgorithm={selectedAlgorithm}
-                        epochs={epochs}
-                      />
+                      <div className="md:order-1">
+                        <VisualizationTab
+                          value="d1"
+                          plotImage={plotImage}
+                          metrics={metrics}
+                          isRunning={isRunning}
+                          selectedAlgorithm={selectedAlgorithm}
+                          epochs={epochs}
+                        />
+                        <VisualizationTab
+                          value="d2"
+                          plotImage={plotImage}
+                          metrics={metrics}
+                          isRunning={isRunning}
+                          selectedAlgorithm={selectedAlgorithm}
+                          epochs={epochs}
+                        />
+                        <VisualizationTab
+                          value="d3"
+                          plotImage={plotImage}
+                          metrics={metrics}
+                          isRunning={isRunning}
+                          selectedAlgorithm={selectedAlgorithm}
+                          epochs={epochs}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Tabs>
-            </div>
-          ) : (
-            <div className=" text-center text-gray-500">
-              <DL />
-            </div>
-          )}
-        </div>
+                </Tabs>
+              </div>
+            ) : (
+              <div className=" text-center text-gray-500 rounded-md">
+                <DL />
+              </div>
+            )}
+          </div>
+        </motion.div>
       </div>
+      <footer className="w-full py-2 bg-black border-t border-purple-950/50 text-gray-400 text-md text-center">
+        Made with <span className="text-red-500">❤️</span> by Team 1 ISTP
+      </footer>
     </>
   );
 }

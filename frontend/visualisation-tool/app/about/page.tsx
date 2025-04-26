@@ -11,10 +11,8 @@ const teamMembers = [
     id: 1,
     name: "Dr. Parimala Kancharla",
     role: "Faculty Advisor",
-    image: "https://randomuser.me/api/portraits/women/8.jpg", // Random placeholder
-    github: "https://github.com/parimalakancharla",
-    linkedin: "https://linkedin.com/in/parimalakancharla",
-    instagram: "https://instagram.com/parimalakancharla",
+    image: "/parimala.jpg",
+    linkedin: "https://www.linkedin.com/in/parimala-kancharla-a3876291/",
   },
   {
     id: 2,
@@ -29,19 +27,19 @@ const teamMembers = [
     id: 3,
     name: "Saurabh Sonkar",
     role: "Web Dev",
-    image: "https://randomuser.me/api/portraits/men/9.jpg", // Random placeholder
-    github: "https://github.com/anjali_sharma",
-    linkedin: "https://linkedin.com/in/rahulverma",
-    instagram: "https://instagram.com/rahulverma",
+    image: "/saurabh.jpg",
+    github: "https://github.com/saurbh264",
+    linkedin: "https://linkedin.com/in/saurabhsonkar",
+    instagram: "https://instagram.com/saurabh_264",
   },
   {
     id: 4,
-    name: "Abhijeet Jha",
-    role: "Survey Lead",
-    image: "https://randomuser.me/api/portraits/men/4.jpg", // Random placeholder
-    github: "https://github.com/rahulverma",
-    linkedin: "https://linkedin.com/in/anjali_sharma",
-    instagram: "https://instagram.com/anjali_sharma",
+    name: "Abhijeet Kumar Jha",
+    role: "Survey Expert",
+    image: "/abhijeet.jpg",
+    github: "https://github.com/ABHIJEETJHA0102",
+    linkedin: "https://www.linkedin.com/in/abhi-abc/",
+    instagram: "https://www.instagram.com/jha_abhijeet_0809",
   },
   {
     id: 5,
@@ -144,7 +142,7 @@ export default function AboutPage() {
                     alt={member.name}
                     className="w-full h-full object-cover rounded-full"
                   />
-                </div>  
+                </div>
                 <h3 className="text-xl text-center font-semibold">
                   {member.name}
                 </h3>
@@ -261,6 +259,9 @@ export default function AboutPage() {
           <div className="absolute top-1/2 right-0 -translate-y-1/2 w-3 h-3 bg-purple-600/80 rounded-full shadow-[0_0_15px_rgba(147,51,234,0.5)]"></div>
         </motion.div>
       </motion.div>
+      <footer className="w-full py-2 bg-black/80 border-t border-purple-950/50 text-gray-400 text-md text-center">
+        Made with <span className="text-red-500">❤️</span> by Team 1 ISTP
+      </footer>
     </div>
   );
 }

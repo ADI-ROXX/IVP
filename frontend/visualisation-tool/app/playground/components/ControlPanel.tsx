@@ -35,9 +35,13 @@ const ControlPanel = ({
         models={models}
       />
 
-      <MaxEpochSelector defaultValue={[50]} setEpochs={setEpochs} />
+      <MaxEpochSelector
+        isRunning={isRunning}
+        defaultValue={[50]}
+        setEpochs={setEpochs}
+      />
       {selectedAlgorithm === "K-Means Clustering" && (
-        <MaxKSelector defaultValue={[3]} setK={setK} />
+        <MaxKSelector isRunning={isRunning} defaultValue={[3]} setK={setK} />
       )}
 
       {/* {selectedAlgorithm === "Linear Regression" && (

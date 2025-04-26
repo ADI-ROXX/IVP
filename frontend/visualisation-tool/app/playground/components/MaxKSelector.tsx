@@ -14,9 +14,14 @@ import { Slider } from "@/components/ui/slider";
 interface MaxKSelectorProps {
   defaultValue: SliderProps["defaultValue"];
   setK: (value: number) => void;
+  isRunning: boolean;
 }
 
-export function MaxKSelector({ defaultValue, setK }: MaxKSelectorProps) {
+export function MaxKSelector({
+  defaultValue,
+  setK,
+  isRunning,
+}: MaxKSelectorProps) {
   const [value, setValue] = React.useState(defaultValue);
 
   return (
@@ -31,6 +36,7 @@ export function MaxKSelector({ defaultValue, setK }: MaxKSelectorProps) {
               </span>
             </div>
             <Slider
+              disabled={isRunning}
               id="maxlength"
               max={20}
               defaultValue={value}
@@ -39,7 +45,7 @@ export function MaxKSelector({ defaultValue, setK }: MaxKSelectorProps) {
                 setValue(value);
                 setK(value[0]);
               }}
-              className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
+              className="[&_[role=slider]]:h-4 cursor-pointer [&_[role=slider]]:w-4"
               aria-label="Maximum Length"
             />
           </div>
