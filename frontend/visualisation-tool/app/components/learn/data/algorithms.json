@@ -1,0 +1,227 @@
+[
+  {
+    "name": "Linear Regression",
+    "description": "Linear Regression is a supervised learning algorithm used for predicting a continuous output variable based on one or more input features. It assumes a linear relationship between the input variables (features) and the output variable (target).",
+    "useCases": ["Predicting house prices", "Forecasting sales"],
+    "complexity": "O(n)",
+    "videoId": "Q81RR3yKn30",
+    "pseudocode": "Initialize weights w and bias b\nFor each epoch:\n  Compute predictions: y_pred = w * X + b\n  Compute loss: MSE = mean((y_pred - y_true)²)\n  Update weights: w = w - learning_rate * gradient(MSE, w)\n  Update bias: b = b - learning_rate * gradient(MSE, b)",
+    "visualization": "https://example.com/linear-regression.gif",
+    "externalLinks": [
+      {
+        "title": "Linear Regression Explained",
+        "url": "https://towardsdatascience.com/linear-regression-explained-1f3c4e2b5a0d"
+      }
+    ]
+  },
+  {
+    "name": "Decision Trees",
+    "description": "Decision Trees are a non-parametric supervised learning method used for classification and regression tasks. They work by recursively splitting the input space into regions based on feature values and making a decision based on the majority class or average value in that region.",
+    "useCases": ["Classifying customer churn", "Medical diagnosis"],
+    "complexity": "O(n log n)",
+    "videoId": "7VeUPuFGJHk",
+    "pseudocode": "Function BuildTree(data):\n  If all data points belong to the same class:\n    Return leaf node with that class\n  Find best feature to split on (max info gain)\n  Split data into subsets based on feature\n  For each subset:\n    BuildTree(subset)\n  Return tree node",
+    "visualization": "https://example.com/decision-trees.gif",
+    "externalLinks": [
+      {
+        "title": "Decision Trees Explained",
+        "url": "https://towardsdatascience.com/decision-trees-explained-1f3c4e2b5a0d"
+      }
+    ]
+  },
+  {
+    "name": "Neural Networks",
+    "description": "Neural Networks are a set of algorithms modeled after the human brain, designed to recognize patterns. They consist of layers of interconnected nodes (neurons) that process input data, apply transformations, and produce an output. They are widely used in deep learning.",
+    "useCases": ["Image recognition", "Natural language processing"],
+    "complexity": "O(n²)",
+    "videoId": "aircAruvnKk",
+    "pseudocode": "Initialize network with random weights\nFor each epoch:\n  Forward pass: Compute output through layers\n  Compute loss: L = loss_function(y_pred, y_true)\n  Backward pass: Compute gradients via backpropagation\n  Update weights: w = w - learning_rate * gradient(L, w)",
+    "visualization": "https://example.com/neural-networks.gif",
+    "externalLinks": [
+      {
+        "title": "Neural Networks Explained",
+        "url": "https://towardsdatascience.com/neural-networks-explained-1f3c4e2b5a0d"
+      }
+    ]
+  },
+  {
+    "name": "Logistic Regression",
+    "description": "Logistic Regression is a statistical method for predicting binary classes. The outcome is usually a binary variable (0 or 1) and the model predicts the probability that the output belongs to a particular category.",
+    "useCases": ["Spam detection", "Credit scoring"],
+    "complexity": "O(n)",
+    "videoId": "yIYKR4sgzI8",
+    "pseudocode": "Initialize weights w and bias b\nFor each epoch:\n  Compute predictions: y_pred = sigmoid(w * X + b)\n  Compute loss:\n  Binary Cross-Entropy = -mean(y_true * log(y_pred) + (1 - y_true) * \n  log(1 - y_pred))\n  Update weights: w = w - learning film_rate * gradient(loss, w)\n  Update bias: b = b - learning_rate * gradient(loss, b)",
+    "visualization": "https://example.com/logistic-regression.gif",
+    "externalLinks": [
+      {
+        "title": "Logistic Regression Explained",
+        "url": "https://towardsdatascience.com/logistic-regression-explained-1f3c4e2b5a0d"
+      }
+    ]
+  },
+  {
+    "name": "Support Vector Machines",
+    "description": "Support Vector Machines (SVM) are supervised learning models used for classification and regression tasks. They find the hyperplane that best separates data points of different classes by maximizing the margin between them.",
+    "useCases": ["Text classification", "Image classification"],
+    "complexity": "O(n³)",
+    "videoId": "efR1C6CvhmE",
+    "pseudocode": "For each pair of classes:\n  Find the hyperplane that maximizes the margin\n  Use kernel trick for non-linear data\n  Classify new points based on the side of the hyperplane",
+    "visualization": "https://example.com/svm.gif",
+    "externalLinks": [
+      {
+        "title": "Support Vector Machines Explained",
+        "url": "https://towardsdatascience.com/support-vector-machines-explained-1f3c4e2b5a0d"
+      }
+    ]
+  },
+  {
+    "name": "K-Means Clustering",
+    "description": "K-Means Clustering is an unsupervised learning algorithm that partitions data into K clusters by minimizing the variance within each cluster. It iteratively assigns points to clusters and updates cluster centroids.",
+    "useCases": ["Market segmentation", "Image compression"],
+    "complexity": "O(n * k * i)",
+    "videoId": "4b5d3muPQmA",
+    "pseudocode": "Choose K initial centroids randomly\nFor each iteration:\n  Assign each point to the nearest centroid\n  Update centroids as the mean of assigned points\nRepeat until convergence",
+    "visualization": "https://example.com/kmeans.gif",
+    "externalLinks": [
+      {
+        "title": "K-Means Clustering Explained",
+        "url": "https://towardsdatascience.com/k-means-clustering-explained-1f3c4e2b5a0d"
+      }
+    ]
+  },
+  {
+    "name": "Random Forest",
+    "description": "Random Forest is an ensemble learning method that constructs multiple decision trees during training and outputs the class that is the mode of the classes (classification) or mean prediction (regression) of the individual trees.",
+    "useCases": ["Fraud detection", "Stock market prediction"],
+    "complexity": "O(n log n * T)",
+    "videoId": "J4Wdy0Wc_xQ",
+    "pseudocode": "For each tree in the forest:\n  Sample data with replacement (bootstrap)\n  Build a decision tree on the sample\n  Randomly select features at each split\nClassify by majority vote of all trees",
+    "visualization": "https://example.com/random-forest.gif",
+    "externalLinks": [
+      {
+        "title": "Random Forest Algorithm",
+        "url": "https://medium.com/@user/random-forest-algorithm"
+      }
+    ]
+  },
+  {
+    "name": "Gradient Boosting",
+    "description": "Gradient Boosting is an ensemble technique that builds models sequentially, each new model correcting errors made by the previous ones. It combines weak learners to create a strong learner.",
+    "useCases": ["Web page ranking", "Customer churn prediction"],
+    "complexity": "O(n * T * log n)",
+    "videoId": "3CC4N4z3a-g",
+    "pseudocode": "Initialize model with a constant value\nFor each iteration:\n  Compute residuals (errors)\n  Fit a weak learner to the residuals\n  Update model: model = model + learning_rate * weak_learner\nReturn final model",
+    "visualization": "https://example.com/gradient-boosting.gif",
+    "externalLinks": [
+      {
+        "title": "Gradient Boosting Explained",
+        "url": "https://towardsdatascience.com/gradient-boosting-explained-1f3c4e2b5a0d"
+      }
+    ]
+  },
+  {
+    "name": "K-Nearest Neighbors",
+    "description": "K-Nearest Neighbors (KNN) is a simple, instance-based learning algorithm used for classification and regression. It classifies a data point based on how its neighbors are classified.",
+    "useCases": ["Recommender systems", "Anomaly detection"],
+    "complexity": "O(n * d)",
+    "videoId": "HVXime0nQeI",
+    "pseudocode": "For each test point:\n  Compute distance to all training points\n  Sort distances and select K nearest neighbors\n  Classify by majority vote of neighbors",
+    "visualization": "https://example.com/knn.gif",
+    "externalLinks": [
+      {
+        "title": "K-Nearest Neighbors Explained",
+        "url": "https://towardsdatascience.com/k-nearest-neighbors-explained-1f3c4e2b5a0d"
+      }
+    ]
+  },
+  {
+    "name": "Naive Bayes",
+    "description": "Naive Bayes is a family of probabilistic algorithms based on Bayes' theorem, assuming independence between features. It is commonly used for text classification and spam detection.",
+    "useCases": ["Spam filtering", "Sentiment analysis"],
+    "complexity": "O(n * m)",
+    "videoId": "CPqOCI0ahss",
+    "pseudocode": "For each class:\n  Compute prior probability P(class)\nFor each feature:\n  Compute likelihood P(feature|class)\nFor a new instance:\n  Compute posterior probability P(class|features) using Bayes' theorem\nReturn class with highest posterior probability",
+    "visualization": "https://example.com/naive-bayes.gif",
+    "externalLinks": [
+      {
+        "title": "Naive Bayes Classifier Explained",
+        "url": "https://towardsdatascience.com/naive-bayes-classifier-explained-1f3c4e2b5a0d"
+      }
+    ]
+  },
+  {
+    "name": "Principal Component Analysis",
+    "description": "Principal Component Analysis (PCA) is a dimensionality reduction technique that transforms data into a lower-dimensional space while preserving as much variance as possible. It identifies the directions (principal components) along which the data varies the most.",
+    "useCases": ["Data visualization", "Noise reduction"],
+    "complexity": "O(n²)",
+    "videoId": "FJxDc8rYz2k",
+    "pseudocode": "Standardize the data\nCompute covariance matrix\nCompute eigenvalues and eigenvectors\nSort eigenvalues and select top K\nTransform data to new space using selected eigenvectors",
+    "visualization": "https://example.com/pca.gif",
+    "externalLinks": [
+      {
+        "title": "PCA Explained",
+        "url": "https://towardsdatascience.com/pca-explained-1f3c4e2b5a0d"
+      }
+    ]
+  },
+  {
+    "name": "Reinforcement Learning",
+    "description": "Reinforcement Learning (RL) is a type of machine learning where an agent learns to make decisions by taking actions in an environment to maximize cumulative reward. It involves exploration and exploitation strategies.",
+    "useCases": ["Game playing", "Robotics"],
+    "complexity": "O(n)",
+    "videoId": "2pWv7GOvuf0",
+    "pseudocode": "Initialize Q-values arbitrarily\nFor each episode:\n  Initialize state\n  For each step:\n    Choose action using policy (e.g., ε-greedy)\n    Take action, observe reward and next state\n    Update Q-value: Q(s, a) = Q(s, a) + α * (reward + γ\n   * max_a' Q(s', a') - Q(s, a))\nReturn learned policy",
+    "visualization": "https://example.com/reinforcement-learning.gif",
+    "externalLinks": [
+      {
+        "title": "Reinforcement Learning Explained",
+        "url": "https://towardsdatascience.com/reinforcement-learning-explained-1f3c4e2b5a0d"
+      }
+    ]
+  },
+  {
+    "name": "Convolutional Neural Networks",
+    "description": "Convolutional Neural Networks (CNNs) are a class of deep neural networks primarily used for image processing. They use convolutional layers to automatically learn spatial hierarchies of features from input images.",
+    "useCases": ["Image classification", "Object detection"],
+    "complexity": "O(n * k²)",
+    "videoId": "zfiSAzpy9NM",
+    "pseudocode": "Initialize weights and biases\nFor each epoch:\n  For each layer:\n    Apply convolution operation\n    Apply activation function (e.g., ReLU)\n  Compute loss\n  Backpropagation to update weights and biases",
+    "visualization": "https://example.com/cnn.gif",
+    "externalLinks": [
+      {
+        "title": "CNN Explained",
+        "url": "https://towardsdatascience.com/cnn-explained-1f3c4e2b5a0d"
+      }
+    ]
+  },
+  {
+    "name": "Recurrent Neural Networks",
+    "description": "Recurrent Neural Networks (RNNs) are a class of neural networks designed for sequential data. They have connections that loop back, allowing them to maintain a memory of previous inputs.",
+    "useCases": ["Time series prediction", "Natural language processing"],
+    "complexity": "O(n²)",
+    "videoId": "AsNTP8Kwu80",
+    "pseudocode": "Initialize weights and biases\nFor each time step:\n  Compute hidden state: h_t = activation(W_h * h_(t-1) + W_x * x_t)\n  Compute output: y_t = W_y * h_t\nReturn final output",
+    "visualization": "https://example.com/rnn.gif",
+    "externalLinks": [
+      {
+        "title": "RNN Explained",
+        "url": "https://towardsdatascience.com/rnn-explained-1f3c4e2b5a0d"
+      }
+    ]
+  },
+  {
+    "name": "DBSCAN",
+    "description": "DBSCAN (Density-Based Spatial Clustering of Applications with Noise) is a clustering algorithm that groups together points that are closely packed together, marking as outliers points that lie alone in low-density regions.",
+    "useCases": ["Geospatial data analysis", "Anomaly detection"],
+    "complexity": "O(n log n)",
+    "videoId": "RDZUdRSDOok",
+    "pseudocode": "For each point in dataset:\n  If point is not visited:\n    Mark point as visited\n    Find neighbors within epsilon distance\n    If number of neighbors >= min_samples:\n      Create new cluster\n      Expand cluster by adding neighbors\nReturn clusters",
+    "visualization": "https://example.com/dbscan.gif",
+    "externalLinks": [
+      {
+        "title": "DBSCAN Explained",
+        "url": "https://towardsdatascience.com/dbscan-explained-1f3c4e2b5a0d"
+      }
+    ]
+  }
+]
