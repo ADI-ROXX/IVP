@@ -14,9 +14,14 @@ import { Slider } from "@/components/ui/slider";
 interface MaxEpochSelectorProps {
   defaultValue: SliderProps["defaultValue"];
   setEpochs: (value: number) => void;
+  isRunning: boolean;
 }
 
-export function MaxEpochSelector({ defaultValue, setEpochs }: MaxEpochSelectorProps) {
+export function MaxEpochSelector({
+  defaultValue,
+  setEpochs,
+  isRunning,
+}: MaxEpochSelectorProps) {
   const [value, setValue] = React.useState(defaultValue);
 
   return (
@@ -31,12 +36,16 @@ export function MaxEpochSelector({ defaultValue, setEpochs }: MaxEpochSelectorPr
               </span>
             </div>
             <Slider
+              disabled={isRunning}
               id="maxlength"
               max={200}
               defaultValue={value}
               step={10}
-              onValueChange={(value) => {setValue(value); setEpochs(value[0]);}}
-              className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
+              onValueChange={(value) => {
+                setValue(value);
+                setEpochs(value[0]);
+              }}
+              className="[&_[role=slider]]:h-4 cursor-pointer [&_[role=slider]]:w-4"
               aria-label="Maximum Length"
             />
           </div>
