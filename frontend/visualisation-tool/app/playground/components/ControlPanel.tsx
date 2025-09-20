@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, Play, Square } from "lucide-react";
 import { ModelSelector } from "./model-selector";
 import { MaxEpochSelector } from "./maxepoch-selector";
 import DatasetSelector from "./DatasetSelector";
@@ -13,6 +13,7 @@ const ControlPanel = ({
   handleAlgorithmChange,
   setEpochs,
   startAlgorithm,
+  stopAlgorithm,
   resetState,
   types,
   models,
@@ -49,9 +50,21 @@ const ControlPanel = ({
       )} */}
 
       <div className="flex w-full items-center space-x-2">
-        <Button onClick={startAlgorithm} disabled={isRunning}>
-          {isRunning ? "Running..." : "Start Algorithm"}
-        </Button>
+        {!isRunning ? (
+          <Button onClick={startAlgorithm} className="flex items-center gap-1.5">
+            <Play size={16} />
+            Start Algorithm
+          </Button>
+        ) : (
+          <Button 
+            onClick={stopAlgorithm} 
+            variant="destructive"
+            className="flex items-center gap-1.5"
+          >
+            <Square size={16} />
+            Stop Algorithm
+          </Button>
+        )}
         <Button variant="secondary" onClick={resetState} disabled={isRunning}>
           <span className="sr-only">Reset</span>
           <RotateCcw />

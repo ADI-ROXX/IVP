@@ -241,7 +241,10 @@ const LandingPage = () => {
 
     // Cleanup
     return () => {
-      if (mountRef.current && renderer.domElement.parentNode === mountRef.current) {
+      if (
+        mountRef.current &&
+        renderer.domElement.parentNode === mountRef.current
+      ) {
         mountRef.current.removeChild(renderer.domElement);
       }
       mountRef.current?.removeChild(renderer.domElement);
@@ -318,9 +321,11 @@ const LandingPage = () => {
               <p className="text-lg font-semibold text-purple-500">
                 "Propagate the Power"
               </p>
-              <button className="px-6 py-3 bg-purple-800 hover:bg-purple-700 rounded-full text-lg font-semibold shadow-xl transition-all">
-                Start Training
-              </button>
+              <Link href="/playground">
+                <button className="px-6 py-3 mt-2 bg-purple-800 hover:bg-purple-700 rounded-full text-lg font-semibold shadow-xl transition-all">
+                  Start Training
+                </button>
+              </Link>
             </motion.div>
           </div>
 

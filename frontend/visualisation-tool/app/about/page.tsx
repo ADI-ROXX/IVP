@@ -35,7 +35,7 @@ const teamMembers = [
   {
     id: 4,
     name: "Abhijeet Kumar Jha",
-    role: "Survey Expert",
+    role: "Web Dev",
     image: "/abhijeet.jpg",
     github: "https://github.com/ABHIJEETJHA0102",
     linkedin: "https://www.linkedin.com/in/abhi-abc/",

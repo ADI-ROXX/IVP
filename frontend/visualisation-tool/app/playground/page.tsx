@@ -148,6 +148,22 @@ export default function PlaygroundPage() {
     }
   };
 
+  const stopAlgorithm = () => {
+    if (isRunning && wsRef.current) {
+      wsRef.current.close();
+      setIsRunning(false);
+      toast.info("⏹️ Algorithm stopped by user", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
+    }
+  };
+
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-black via-purple-950 to-gray-900 overflow-hidden">
@@ -185,6 +201,7 @@ export default function PlaygroundPage() {
                         ? "bg-purple-100 text-purple-800"
                         : "hover:bg-gray-100"
                     }`}
+                    disabled = {isRunning}
                     onClick={() => setActiveTab("machine-learning")}
                   >
                     Machine Learning
@@ -196,6 +213,7 @@ export default function PlaygroundPage() {
                         : "hover:bg-gray-100"
                     }`}
                     onClick={() => setActiveTab("deep-learning")}
+                    disabled = {isRunning}
                   >
                     Deep Learning
                   </button>
@@ -222,6 +240,7 @@ export default function PlaygroundPage() {
                         handleAlgorithmChange={handleAlgorithmChange}
                         setEpochs={setEpochs}
                         startAlgorithm={startAlgorithm}
+                        stopAlgorithm={stopAlgorithm}
                         resetState={resetState}
                         types={types}
                         models={models}
